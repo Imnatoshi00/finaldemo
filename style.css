@@ -40,7 +40,14 @@ section {
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.35s ease;
+
+  /* 👇 ADD THESE */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  will-change: transform;
 }
+
 
 section.active {
   display: block;
@@ -116,5 +123,11 @@ li {
 @media (max-width: 600px) {
   .navbar {
     flex-wrap: wrap;
+  }
+}
+@media (max-width: 768px) {
+  section {
+    background-attachment: scroll;
+    background-position: center top;
   }
 }
