@@ -36,12 +36,13 @@ body {
 section {
   min-height: 100dvh;
   padding: 90px 16px 40px;
+
   display: none;
   opacity: 0;
   transform: translateY(10px);
-  transition: all 0.35s ease;
+  transition: opacity 0.35s ease, transform 0.35s ease;
 
-  /* 👇 ADD THESE */
+  /* ✅ Background fix */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
