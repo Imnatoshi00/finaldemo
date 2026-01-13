@@ -1,143 +1,106 @@
-let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-let historyExpenses = JSON.parse(localStorage.getItem("history")) || [];
+const form = document.getElementById("expense-form");
+const list = document.getElementById("expense-list");
+const totalEl = document.getElementById("total");
+const historyList = document.getElementById("history-list");
+const analyticsList = document.getElementById("analytics-list");
+const warningEl = document.getElementById("budget-warning");
 
-let weeklyBudget = Number(localStorage.getItem("budget")) || 0;
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+let history = JSON.parse(localStorage.getItem("history")) || [];
+let budget = JSON.parse(localStorage.getItem("budget")) || 0;
 let budgetStart = localStorage.getItem("budgetStart");
 
-/* NAVIGATION */
+document.getElementById("current-budget").textContent = budget;
+
+/* SECTION SWITCH */
 function showSection(id) {
-  document.querySelectorAll("section").forEach(sec =>
-    sec.classList.remove("active")
-  );
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-/* ADD EXPENSE */
-document.getElementById("expense-form").addEventListener("submit", e => {
-  e.preventDefault();
+/* BUDGET */
+function setBudget() {
+  budget = Number(document.getElementById("budget-input").value);
+  budgetStart = Date.now();
+  localStorage.setItem("budget", budget);
+  localStorage.setItem("budgetStart", budgetStart);
+  document.getElementById("current-budget").textContent = budget;
+}
 
-  const expense = {
+/* RESET WEEKLY */
+if (budgetStart && Date.now() - budgetStart > 7 * 86400000) {
+  expenses = [];
+  localStorage.removeItem("expenses");
+}
+
+/* RENDER */
+function render() {
+  list.innerHTML = "";
+  historyList.innerHTML = "";
+  analyticsList.innerHTML = "";
+
+  let total = 0;
+  let categories = {};
+
+  expenses.forEach((e, i) => {
+    total += e.amount;
+    categories[e.category] = (categories[e.category] || 0) + e.amount;
+
+    list.innerHTML += `
+      <li>${e.title} ₹${e.amount}
+        <button onclick="removeExpense(${i})">X</button>
+      </li>`;
+  });
+
+  history.forEach(e => {
+    historyList.innerHTML += `<li>${e.title} ₹${e.amount}</li>`;
+  });
+
+  for (let c in categories) {
+    analyticsList.innerHTML += `<li>${c}: ₹${categories[c]}</li>`;
+  }
+
+  totalEl.textContent = total;
+
+  warningEl.textContent =
+    budget && total > budget
+      ? "⚠ Budget exceeded!"
+      : "";
+}
+
+function removeExpense(i) {
+  history.push(expenses[i]);
+  expenses.splice(i, 1);
+  save();
+}
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const exp = {
     title: title.value,
     amount: Number(amount.value),
     category: category.value,
     date: date.value
   };
-
-  expenses.push(expense);
-  historyExpenses.push(expense);
-
-  localStorage.setItem("expenses", JSON.stringify(expenses));
-  localStorage.setItem("history", JSON.stringify(historyExpenses));
-
-  e.target.reset();
-  render();
+  expenses.push(exp);
+  history.push(exp);
+  save();
+  form.reset();
 });
 
-/* DELETE FROM HOME */
-function deleteExpense(i) {
-  expenses.splice(i, 1);
+function save() {
   localStorage.setItem("expenses", JSON.stringify(expenses));
+  localStorage.setItem("history", JSON.stringify(history));
   render();
-}
-
-/* RENDER */
-function render() {
-  const list = document.getElementById("expense-list");
-  let total = 0;
-  list.innerHTML = "";
-
-  expenses.forEach((e, i) => {
-    total += e.amount;
-    const li = document.createElement("li");
-    li.innerHTML = `${e.title} ₹${e.amount}
-      <button onclick="deleteExpense(${i})">X</button>`;
-    list.appendChild(li);
-  });
-
-  document.getElementById("total").textContent = total;
-
-  renderHistory();
-  renderAnalytics();
-  updateBudgetStatus();
-}
-
-/* HISTORY */
-function renderHistory() {
-  historyList.innerHTML = "";
-  historyExpenses.forEach(e => {
-    const li = document.createElement("li");
-    li.textContent = `${e.date} - ${e.title} ₹${e.amount}`;
-    historyList.appendChild(li);
-  });
-}
-
-/* ANALYTICS */
-function renderAnalytics() {
-  if (historyExpenses.length === 0) {
-    analyticsData.textContent = "No data yet";
-    return;
-  }
-
-  const total = historyExpenses.reduce((s,e)=>s+e.amount,0);
-  analyticsData.textContent =
-    `Total spent: ₹${total} | Purchases: ${historyExpenses.length}`;
 }
 
 /* EXPORT */
-function exportCSV() {
-  let csv = "Title,Amount,Category,Date\n";
-  historyExpenses.forEach(e => {
-    csv += `${e.title},${e.amount},${e.category},${e.date}\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
+function exportData() {
+  const blob = new Blob([JSON.stringify(history)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "expenses.csv";
+  a.download = "expenses.json";
   a.click();
 }
 
-/* BUDGET */
-function setBudget() {
-  weeklyBudget = Number(budgetInput.value);
-  if (!weeklyBudget) return;
-
-  localStorage.setItem("budget", weeklyBudget);
-
-  if (!budgetStart) {
-    budgetStart = new Date().toISOString();
-    localStorage.setItem("budgetStart", budgetStart);
-  }
-
-  updateBudgetStatus();
-}
-
-function updateBudgetStatus() {
-  if (!weeklyBudget || !budgetStart) return;
-
-  const start = new Date(budgetStart);
-  const now = new Date();
-  const days = Math.floor((now - start)/(1000*60*60*24));
-
-  if (days >= 7) {
-    budgetStart = now.toISOString();
-    localStorage.setItem("budgetStart", budgetStart);
-  }
-
-  const spent = historyExpenses
-    .filter(e => new Date(e.date) >= new Date(budgetStart))
-    .reduce((s,e)=>s+e.amount,0);
-
-  if (spent > weeklyBudget) {
-    budgetStatus.textContent = "⚠️ Budget exceeded!";
-    budgetStatus.className = "warning";
-  } else {
-    budgetStatus.textContent =
-      `Remaining: ₹${weeklyBudget - spent}`;
-    budgetStatus.className = "safe";
-  }
-}
-
-/* INIT */
-showSection("home");
 render();

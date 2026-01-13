@@ -6,7 +6,8 @@
 
 body {
   font-family: Arial, sans-serif;
-  min-height: 100vh;
+  background: #f1f5f9;
+  padding-top: 70px;
 }
 
 /* NAVBAR */
@@ -14,89 +15,54 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.7);
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   padding: 10px;
   z-index: 1000;
 }
 
 .navbar button {
-  background: transparent;
   color: white;
+  background: transparent;
   border: 1px solid white;
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
 }
 
-.navbar button:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-/* SECTIONS + ANIMATION */
+/* SECTIONS */
 section {
-  min-height: 100vh;
-  padding: 100px 20px 40px;
-  background-size: cover;
-  background-position: center;
-
-  position: absolute;
-  inset: 0;
-
+  min-height: 100dvh;
+  padding: 90px 16px 40px;
+  display: none;
   opacity: 0;
-  transform: translateY(15px);
-  pointer-events: none;
-
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  transform: translateY(10px);
+  transition: all 0.35s ease;
 }
 
 section.active {
+  display: block;
   opacity: 1;
   transform: translateY(0);
-  pointer-events: auto;
 }
 
-/* BACKGROUNDS */
-#home {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
-    url("bg1.jpg");
-}
-
-#budget {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
-    url("budget.jpg");
-}
-
-#history {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
-    url("history.jpg");
-}
-
-#analytics {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
-    url("analyis.jpg");
-}
-
-#export {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
-    url("download.jpg");
-}
-
-/* APP CARD */
+/* CARD */
 .app {
   max-width: 500px;
   margin: auto;
+  background: rgba(255,255,255,0.85);
   padding: 20px;
   border-radius: 12px;
-  background: rgba(255,255,255,0.4);
-  backdrop-filter: blur(8px);
+}
+
+/* TEXT */
+.subtitle, .hint {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #374151;
 }
 
 /* FORM */
@@ -105,43 +71,27 @@ form {
   gap: 10px;
 }
 
-input, select {
+input, select, button {
   padding: 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(0,0,0,0.3);
-  background: rgba(243,244,246,0.9);
-}
-
-input::placeholder {
-  color: #6b7280;
+  border-radius: 6px;
+  border: 1px solid #9ca3af;
 }
 
 button {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
   background: #4f46e5;
   color: white;
+  font-weight: bold;
   cursor: pointer;
-  font-weight: bold;
 }
 
-button:hover {
-  background: #4338ca;
-}
-
-.total {
-  margin: 15px 0;
-  font-weight: bold;
-  text-align: center;
-}
-
+/* LIST */
 ul {
   list-style: none;
+  margin-top: 10px;
 }
 
 li {
-  background: rgba(255,255,255,0.9);
+  background: #e5e7eb;
   padding: 8px;
   margin-bottom: 6px;
   border-radius: 6px;
@@ -149,93 +99,22 @@ li {
   justify-content: space-between;
 }
 
-.subtitle {
-  font-size: 14px;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.hint {
-  font-size: 12px;
-  text-align: center;
-  opacity: 0.8;
-}
-
+/* STATUS */
 .warning {
   color: #b91c1c;
+  text-align: center;
   font-weight: bold;
 }
 
 .safe {
-  color: #065f46;
+  text-align: center;
   font-weight: bold;
-}
-/* =========================
-   RESPONSIVE DESIGN
-   ========================= */
-
-/* Tablets & small laptops */
-@media (max-width: 900px) {
-  .app {
-    max-width: 90%;
-  }
+  color: #065f46;
 }
 
-/* Mobile phones */
+/* MOBILE */
 @media (max-width: 600px) {
-
-  /* Navbar */
   .navbar {
     flex-wrap: wrap;
-    gap: 6px;
-    padding: 8px;
-  }
-
-  .navbar button {
-    font-size: 13px;
-    padding: 6px 10px;
-  }
-
-  /* Sections */
-  section {
-    padding: 90px 12px 30px;
-  }
-
-  /* App card */
-  .app {
-    padding: 16px;
-    border-radius: 10px;
-  }
-
-  h1, h2 {
-    font-size: 20px;
-    text-align: center;
-  }
-
-  .subtitle {
-    font-size: 13px;
-  }
-
-  .hint {
-    font-size: 11px;
-  }
-
-  /* Form elements */
-  input,
-  select,
-  button {
-    font-size: 14px;
-    padding: 9px;
-  }
-
-  /* Expense list */
-  li {
-    font-size: 13px;
-    padding: 6px;
-  }
-
-  /* Total text */
-  .total {
-    font-size: 14px;
   }
 }

@@ -2,79 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Expense Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<nav class="navbar">
-  <button onclick="showSection('home')">Home</button>
-  <button onclick="showSection('budget')">Budget</button>
-  <button onclick="showSection('history')">History</button>
-  <button onclick="showSection('analytics')">Analytics</button>
-  <button onclick="showSection('export')">Export</button>
-</nav>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <button onclick="showSection('home')">Home</button>
+    <button onclick="showSection('budget')">Budget</button>
+    <button onclick="showSection('history')">History</button>
+    <button onclick="showSection('analytics')">Analytics</button>
+    <button onclick="showSection('export')">Export</button>
+  </nav>
 
-<section id="home">
-  <div class="app">
-    <h1>Expense Tracker</h1>
-    <p class="subtitle">Track your daily spending easily.</p>
+  <!-- HOME -->
+  <section id="home" class="active">
+    <div class="app">
+      <h1>Expense Tracker</h1>
+      <p class="subtitle">Track your daily spending easily</p>
 
-    <form id="expense-form">
-      <input id="title" placeholder="Expense name" required />
-      <input id="amount" type="number" placeholder="Amount" required />
-      <select id="category">
-        <option>Food</option>
-        <option>Travel</option>
-        <option>Shopping</option>
-        <option>Other</option>
-      </select>
-      <input id="date" type="date" required />
-      <button type="submit">Add Expense</button>
-    </form>
+      <form id="expense-form">
+        <input type="text" id="title" placeholder="Expense name" required />
+        <input type="number" id="amount" placeholder="Amount" required />
+        <select id="category">
+          <option>Food</option>
+          <option>Travel</option>
+          <option>Shopping</option>
+          <option>Other</option>
+        </select>
+        <input type="date" id="date" required />
+        <button>Add Expense</button>
+      </form>
 
-    <p class="hint">💡 Add expenses daily to stay accurate</p>
+      <div class="total">Total Spent: ₹<span id="total">0</span></div>
+      <p id="budget-warning"></p>
 
-    <div class="total">Total: ₹<span id="total">0</span></div>
-    <ul id="expense-list"></ul>
-  </div>
-</section>
+      <ul id="expense-list"></ul>
+    </div>
+  </section>
 
-<section id="budget">
-  <div class="app">
-    <h2>Weekly Budget</h2>
-    <p class="subtitle">Budget resets every 7 days</p>
+  <!-- BUDGET -->
+  <section id="budget">
+    <div class="app">
+      <h2>Weekly Budget</h2>
+      <p class="hint">Set a spending limit (resets every 7 days)</p>
 
-    <input id="budgetInput" type="number" placeholder="Enter weekly budget ₹">
-    <button onclick="setBudget()">Save Budget</button>
+      <input type="number" id="budget-input" placeholder="Enter weekly budget" />
+      <button onclick="setBudget()">Save Budget</button>
 
-    <p id="budgetStatus"></p>
-  </div>
-</section>
+      <p class="safe">Current Budget: ₹<span id="current-budget">0</span></p>
+    </div>
+  </section>
 
-<section id="history">
-  <div class="app">
-    <h2>History</h2>
-    <p class="subtitle">Permanent expense record</p>
-    <ul id="historyList"></ul>
-  </div>
-</section>
+  <!-- HISTORY -->
+  <section id="history">
+    <div class="app">
+      <h2>Purchase History</h2>
+      <p class="hint">All expenses are stored here permanently</p>
+      <ul id="history-list"></ul>
+    </div>
+  </section>
 
-<section id="analytics">
-  <div class="app">
-    <h2>Analytics</h2>
-    <p id="analyticsData"></p>
-  </div>
-</section>
+  <!-- ANALYTICS -->
+  <section id="analytics">
+    <div class="app">
+      <h2>Analytics</h2>
+      <p class="hint">Spending by category</p>
+      <ul id="analytics-list"></ul>
+    </div>
+  </section>
 
-<section id="export">
-  <div class="app">
-    <h2>Export Data</h2>
-    <button onclick="exportCSV()">Download CSV</button>
-  </div>
-</section>
+  <!-- EXPORT -->
+  <section id="export">
+    <div class="app">
+      <h2>Export Data</h2>
+      <p class="hint">Download your expenses as JSON</p>
+      <button onclick="exportData()">Download</button>
+    </div>
+  </section>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
